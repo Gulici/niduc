@@ -1,0 +1,38 @@
+\chapter{Plan eksperymentu/Symulacja}
+
+\section{Struktura układu}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img04/model-układu.png}
+    \caption{Schematyczny model arytmetyczego układu samosprawdzającego modulo 3. Źródło: Design of the coarse-grained reconfigurable architecture DART with
+on-line error detection.\cite{JAFRI2014124}}
+    \label{fig:model}
+\end{figure}
+
+\section{Model uszkodzeń i symulacja}
+
+Symulacja została zaprojektowana tak, aby odwzorować pojedyncze błędy przemijające (ang. \textit{transient faults}), których źródłem mogą być cząstki promieniowania kosmicznego powodujące chwilową zmianę stanu logicznego.  
+Każdy taki błąd modelowany jest w postaci \textbf{uszkodzenia typu stuck-at}, polegającego na wymuszeniu stałej wartości logicznej 0 lub 1 na wyjściu wybranej bramki logicznej.
+
+W modelu symulacyjnym każda bramka oraz kluczowy sygnał pośredni zostały wyposażone w dodatkowy moduł \texttt{fault\_mux}, który umożliwia wymuszenie błędnej wartości przy pomocy magistrali sterującej \texttt{fault\_en\_bus}.  
+Dzięki temu możliwe jest systematyczne testowanie wszystkich pojedynczych punktów potencjalnej awarii.
+
+\section{Procedura testowa}
+
+Symulacja obejmuje pełne przeszukanie przestrzeni wejść i uszkodzeń:
+\[
+\textit{Wejścia} \times \textit{Punkty iniekcji} \times \{\textit{stuck-at-0, stuck-at-1}\}.
+\]
+Dla każdej kombinacji przeprowadzane są dwa przebiegi:
+\begin{enumerate}
+    \item \textbf{Referencyjny} - bez aktywnego uszkodzenia, w celu uzyskania poprawnego wyniku.
+    \item \textbf{Testowy} - z aktywnym pojedynczym uszkodzeniem (\texttt{fault\_en}=1), w celu porównania wyników toru głównego i kontrolnego.
+\end{enumerate}
+
+Na podstawie porównania wyników klasyfikuje się przypadki jako:
+\begin{itemize}
+    \item \textbf{Błąd wykryty} - wynik błędny poprawnie zgłoszony przez komparator,
+    \item \textbf{Błąd niewykryty (false negative)} - wynik błędny uznany za poprawny,
+    \item \textbf{Błąd fałszywy (false positive)} - wynik poprawny błędnie zidentyfikowany jako błędny.
+\end{itemize}

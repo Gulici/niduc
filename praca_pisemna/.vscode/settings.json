@@ -1,0 +1,66 @@
+{
+    "latex-workshop.latex.tools": [
+        {
+        "name": "latexmk",
+        "command": "latexmk",
+        "args": [
+            "-synctex=1",
+            "-interaction=nonstopmode",
+            "-file-line-error",
+            "-pdf",
+            "-shell-escape",
+            "-outdir=out",
+            "%DOC%"
+        ]
+        }
+    ],
+
+    "latex-workshop.latex.recipes": [
+    { "name": "latexmk (PDF)", "tools": ["latexmk"] }
+    ],
+
+    "latex-workshop.latex.outDir": "out",
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    "latex-workshop.latex.clean.subfolder.enabled": true,
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux", "*.bbl", "*.blg", "*.fdb_latexmk", "*.fls",
+        "*.log", "*.out", "*.synctex.gz", "*.toc"
+    ],
+
+    "latex-workshop.view.pdf.viewer": "tab",     // wbudowany viewer
+    "latex-workshop.view.pdf.ref.viewer": "auto",
+    "latex-workshop.synctex.afterBuild.enabled": true,
+    "latex-workshop.synctex.synctexjs.enabled": true,
+    "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
+    "latex-workshop.view.pdf.internal.autoReload.enabled": true,
+    "latex-workshop.view.pdf.internal.autoReload.delay": 500,
+
+    // Kodowanie i język
+    "files.encoding": "utf8",
+    "files.autoGuessEncoding": false,
+    "files.eol": "\n",
+
+    // Spell checker
+    "cSpell.enabled": true,
+    "cSpell.language": "en,pl",
+    "cSpell.allowCompoundWords": true,
+    "cSpell.diagnosticLevel": "Hint",
+    "cSpell.enabledFileTypes":  {
+        "*": true,
+        "markdown": true,
+        "plaintext": true,
+        "latex": true,
+    },
+    // "cSpell.enabledLanguageIds": ["latex", "plaintext", "markdown"],
+    "cSpell.ignoreRegExpList": [
+        "\\\\[A-Za-z]+",
+        "\\$[^\\$]*\\$",
+        "\\\\begin\\{[^}]*\\}[\\s\\S]*?\\\\end\\{[^}]*\\}"
+    ],
+    "cSpell.userWords": ["LaTeX", "TeX", "bibliografia", "źródło"],
+
+
+  // INNE
+  "latex-workshop.intellisense.package.enabled": true,
+  "latex-workshop.message.log.show": false
+}

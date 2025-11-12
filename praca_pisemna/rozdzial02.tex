@@ -1,0 +1,110 @@
+\chapter{Podstawy teoretyczne}
+
+\section{Model błędów i uszkodzeń}
+
+W układach cyfrowych występują dwa główne typy nieprawidłowości: \textbf{uszkodzenia} (\textit{faults}) i \textbf{błędy} (\textit{errors}).  
+Uszkodzenie jest zjawiskiem fizycznym lub logicznym powodującym trwałe lub chwilowe odstępstwo działania układu od jego specyfikacji, natomiast błąd jest skutkiem tego uszkodzenia widocznym w danych lub wynikach obliczeń.  
+Jeśli błąd nie zostanie wykryty, może prowadzić do \textbf{awarii} systemu (\textit{failure}), objawiającej się nieprawidłowym działaniem całego układu.\cite{JAFRI2014124}
+
+Szczególne znaczenie w kontekście współczesnych technologii mają \textbf{błędy przemijające} (\textit{transient faults}). Powstają one w wyniku zjawisk losowych, takich jak oddziaływanie cząstek promieniowania kosmicznego lub promieniowania jonizującego, które chwilowo zaburzają stan logiczny tranzystorów lub węzłów sygnałowych.  
+Takie błędy nie powodują trwałego uszkodzenia struktury układu, ale mogą prowadzić do błędnych wyników obliczeń — szczególnie w urządzeniach reprogramowalnych, takich jak FPGA, oraz w procesorach o wysokiej gęstości integracji.\cite{JAFRI2014124}
+
+Model błędu przemijającego w układach kombinacyjnych często opisuje się jako \textbf{uszkodzenie typu stuck-at}, polegające na trwałym wymuszeniu wartości logicznej „0” lub „1” na danym sygnale, niezależnie od rzeczywistej funkcji logicznej.  
+
+\section{Metody wykrywania błędów w układach arytmetycznych}
+
+Wykrywanie błędów w czasie rzeczywistym (\textit{on-line error detection}) jest kluczowe dla systemów o podwyższonej niezawodności.  
+W praktyce stosuje się kilka podejść, różniących się skutecznością i złożonością sprzętową:
+
+\subsection{Kod parzystości}
+
+Najprostszym mechanizmem wykrywania błędów jest \textbf{kod parzystości}, w którym do każdego słowa binarnego dodaje się dodatkowy bit informujący o parzystości liczby jedynek.  
+Kod ten umożliwia wykrycie wszystkich pojedynczych błędów bitowych oraz błędów o nieparzystej krotności.  
+Jego główną wadą jest jednak niska skuteczność w przypadku układów arytmetycznych, gdzie występuje propagacja przeniesień — nawet pojedyncze uszkodzenie może spowodować zmianę kilku bitów, a wynikowy błąd może mieć parzystą krotność i pozostać niewykryty.  
+Ponadto, aby układ był samosprawdzający, cała struktura arytmetyczna musiałaby być przeprojektowana w celu przewidywania i propagacji bitów parzystości.
+
+\subsection{Metoda duplikacji z porównywaniem (DWC)}
+
+Drugim klasycznym podejściem jest \textbf{duplikacja z porównywaniem} (\textit{Dual Modular Redundancy, DWC}), w której funkcjonalny blok obliczeniowy jest zdublowany, a wyniki obu torów są porównywane przez komparator.  
+Rozwiązanie to pozwala na wykrycie dowolnego pojedynczego błędu w jednym z torów, jednak kosztem dwukrotnego zwiększenia liczby zasobów sprzętowych i poboru mocy.  
+Z tego względu DWC stosuje się głównie w systemach krytycznych, gdzie koszt jest drugorzędny wobec niezawodności.
+
+\subsection{Kody resztowe (Residue Codes)}
+
+Kody resztowe (\textit{residue codes}) stanowią efektywną metodę wykrywania błędów w układach arytmetycznych.  
+Wykorzystują one własności arytmetyki modularnej, przypisując każdej liczbie dodatkową część kontrolną — jej resztę z dzielenia przez ustaloną podstawę \( A \):
+\[
+|X|_A = X \bmod A.
+\]
+
+W układzie chronionym kodem resztowym obliczenie zasadnicze i jego odpowiednik modularny są wykonywane równolegle, a następnie porównywane.  
+Jeśli wyniki nie są przystające modulo \( A \), oznacza to wystąpienie błędu.  
+
+Kody resztowe są kodami \textbf{separowalnymi}, co pozwala dodać tor kontrolny bez modyfikacji głównego układu arytmetycznego.  
+Wyróżniają się niskim kosztem implementacji i wysoką skutecznością detekcji — wykrywają wszystkie błędy pojedyncze oraz znaczną część błędów wielokrotnych.  
+
+Szczególnie korzystny w praktyce jest kod \textbf{modulo 3}, który wymaga jedynie dwóch bitów kontrolnych i prostych bloków logicznych, dzięki czemu znajduje zastosowanie w samosprawdzających sumatorach i jednostkach arytmetycznych.
+
+\section{Arytmetyka resztowa}
+
+Arytmetyka resztowa (zwana także modularną) jest działem matematyki zajmującym się operacjami na liczbach całkowitych z uwzględnieniem ich reszty z dzielenia przez pewną ustaloną liczbę całkowitą \( m \), nazywaną \textbf{modułem}.  
+W arytmetyce tej interesują nas nie same wartości liczb, lecz ich reszty z dzielenia przez moduł, co pozwala znacząco uprościć obliczenia i ograniczyć zakres wartości liczbowych.\cite{WikipediaArytmetyka}
+
+Działania w arytmetyce modularnej znajdują szerokie zastosowanie w informatyce i elektronice, m.in. w algorytmach kryptograficznych, kodach korekcyjnych oraz układach samosprawdzających, takich jak stosowane w niniejszym projekcie.
+
+\subsection{Przystawanie liczb}
+
+Podstawowym pojęciem w arytmetyce modularnej jest \textbf{przystawanie liczb}.  
+Dwie liczby całkowite \( a \) oraz \( b \) nazywamy \textbf{przystającymi modulo} \( m \), jeśli ich różnica jest całkowitą wielokrotnością liczby \( m \). Formalnie zapisuje się to jako:
+
+\[
+a \equiv b \pmod{m} \quad \Leftrightarrow \quad m \;|\; (a - b)
+\]
+
+co oznacza, że liczby \( a \) i \( b \) dają tę samą resztę z dzielenia przez \( m \).  
+Na przykład:
+\[
+14 \equiv 2 \pmod{12}
+\]
+ponieważ \( 14 - 2 = 12 \), a więc różnica jest podzielna przez 12.
+
+Przystawanie jest relacją równoważności i zachowuje zgodność wobec działań arytmetycznych.  
+Jeśli zachodzą przystawania:
+\[
+a \equiv b \pmod{m} \quad i \quad c \equiv d \pmod{m},
+\]
+to również:
+\[
+a + c \equiv b + d \pmod{m}
+\]
+oraz
+\[
+a \cdot c \equiv b \cdot d \pmod{m}.
+\]
+
+Oznacza to, że dodawanie i mnożenie liczb przystających zachowuje przystawanie – co stanowi podstawę działania układów arytmetycznych w kodach resztowych.
+
+% \subsubsection{Przykład przystawania}
+
+% Rozważmy arytmetykę modulo \( 3 \).  
+% Liczby \( 8 \) i \( 5 \) są przystające, ponieważ:
+% \[
+% 8 - 5 = 3,
+% \]
+% a 3 jest wielokrotnością modułu.  
+% Zatem:
+% \[
+% 8 \equiv 5 \pmod{3}.
+% \]
+
+% Obie liczby dają tę samą resztę z dzielenia przez 3 – równą 2, ponieważ:
+% \[
+% 8 \bmod 3 = 2, \quad 5 \bmod 3 = 2.
+% \]
+
+% W kontekście kodu resztowego mod~3 oznacza to, że jeśli wynik obliczeń w torze głównym wynosi 8, a w torze kontrolnym 5, układ uzna je za zgodne, ponieważ obie liczby są przystające modulo~3.  
+% Jeżeli natomiast wynik kontrolny wynosiłby 4 (czyli \(4 \bmod 3 = 1\)), wówczas:
+% \[
+% 8 \not\equiv 4 \pmod{3},
+% \]
+% co wskazuje na wystąpienie błędu.

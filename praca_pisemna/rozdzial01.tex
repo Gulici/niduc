@@ -1,0 +1,35 @@
+\chapter{Wstęp}
+
+\section{Cel i zakres pracy}
+Celem niniejszej pracy jest analiza niezawodności układów arytmetycznych narażonych na występowanie błędów przemijających, na przykładzie czterobitowego sumatora wyposażonego w układ samosprawdzający oparty na arytmetyce resztowej modulo 3. W szczególności badaniu poddano skuteczność detekcji błędów wprowadzanych do struktury układu poprzez symulację pojedynczych uszkodzeń logicznych typu \textit{stuck-at-0} oraz \textit{stuck-at-1}.
+
+Praca obejmuje zarówno część teoretyczną - przedstawiającą podstawy działania kodów resztowych i ich właściwości w kontekście niezawodności układów cyfrowych - jak i część eksperymentalną, obejmującą symulację działania układu oraz analizę uzyskanych wyników.
+
+\section{Tło i znaczenie problemu}
+Wraz z miniaturyzacją technologii półprzewodnikowych rośnie podatność układów cyfrowych na zakłócenia promieniowania kosmicznego i jonizującego. Cząstki wysokoenergetyczne mogą powodować chwilowe zmiany stanów logicznych w tranzystorach, prowadząc do wystąpienia błędów przemijających (\textit{soft errors}). Tego typu zjawiska nie powodują trwałego uszkodzenia sprzętu, lecz mogą skutkować błędnymi wynikami obliczeń, co w systemach krytycznych - takich jak sterowanie lotem, przetwarzanie danych naukowych czy systemy kosmiczne - jest niedopuszczalne.
+
+W celu ograniczenia wpływu takich błędów opracowano szereg metod detekcji i korekcji, w tym techniki oparte na kodach resztowych, które pozwalają na bieżące sprawdzanie poprawności obliczeń bez znaczącego wzrostu złożoności układu. Kody resztowe, a w szczególności kod modulo 3, umożliwiają realizację tzw. układów samosprawdzających, w których każda operacja arytmetyczna ma równoległy tor kontrolny pracujący w arytmetyce resztowej.
+
+\newpage
+\section{Założenia eksperymentu}
+W eksperymencie zbudowano model układu kombinacyjnego składającego się z:
+\begin{itemize}
+    \item głównego sumatora czterobitowego,
+    \item modułu generującego resztę z dzielenia przez 3 dla pięciobitowej liczby reprezentującej sumę wejść,
+    \item sumatora kontrolnego realizującego operacje w arytmetyce modulo 3,
+    \item modułów generujących resztę mod 3 dla operandów wejściowych,
+    \item komparatora porównującego reszty wyniku z obu torów.
+\end{itemize}
+
+Kluczowym elementem jest możliwość symulowania pojedynczych uszkodzeń w strukturze układu w celu odwzorowania wpływu błędów przemijających spowodowanych promieniowaniem kosmicznym.
+Uszkodzenia te modelowane są jako sklejenie sygnału do wartości logicznej 0 lub 1 (stuck-at-0 / stuck-at-1) na wybranych połączeniach pomiędzy bramkami logicznymi.
+Dla każdego wprowadzonego uszkodzenia przeprowadzana jest pełna analiza działania układu, obejmująca porównanie wyniku obliczeń głównego toru arytmetycznego z wynikiem toru kontrolnego modulo 3.
+
+Otrzymane wyniki klasyfikowane są w trzech kategoriach:
+\begin{itemize}
+\item \textbf{błąd wykryty} – wynik błędny został poprawnie zidentyfikowany przez komparator,
+\item \textbf{błąd niewykryty (false negative)} – wynik błędny został błędnie uznany za poprawny,
+\item \textbf{błąd fałszywy (false positive)} – wynik poprawny został błędnie zidentyfikowany jako błędny.
+\end{itemize}
+
+Takie podejście pozwala na ilościową ocenę skuteczności detekcji błędów przez układ samosprawdzający oraz identyfikację elementów najbardziej wrażliwych na uszkodzenia logiczne.
