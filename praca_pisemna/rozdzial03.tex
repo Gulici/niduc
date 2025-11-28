@@ -10,12 +10,29 @@ on-line error detection.\cite{JAFRI2014124}}
     \label{fig:model}
 \end{figure}
 
+\subsection{Schematy}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img04/modulo3_6bit.png}
+    \caption{Schemat 6-bit generatora reszt modulo 3.}
+    \label{fig:6bitmod3}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img04/schemat_impl.png}
+    \caption{Schemat samosprawdzającego układu arytmetyczego mod3}
+    \label{fig:układ}
+\end{figure}
+
+\newpage
 \section{Model uszkodzeń i symulacja}
 
-Symulacja została zaprojektowana tak, aby odwzorować pojedyncze błędy przemijające (ang. \textit{transient faults}), których źródłem mogą być cząstki promieniowania kosmicznego powodujące chwilową zmianę stanu logicznego.  
-Każdy taki błąd modelowany jest w postaci \textbf{uszkodzenia typu stuck-at}, polegającego na wymuszeniu stałej wartości logicznej 0 lub 1 na wyjściu wybranej bramki logicznej.
+Symulacja została zaprojektowana tak, aby odwzorować pojedyncze uszkodzenia przemijające (ang. \textit{transient faults}), których źródłem mogą być cząstki promieniowania kosmicznego powodujące chwilową zmianę stanu logicznego.  
+Każde takie uszkodzenie modelowane jest w postaci sklejenia stanu logicznego \textbf{stuck-at}, polegającego na wymuszeniu stałej wartości logicznej 0 lub 1 na wyjściu danego układu logicznego.
 
-W modelu symulacyjnym każda bramka oraz kluczowy sygnał pośredni zostały wyposażone w dodatkowy moduł \texttt{fault\_mux}, który umożliwia wymuszenie błędnej wartości przy pomocy magistrali sterującej \texttt{fault\_en\_bus}.  
+W modelu symulacyjnym każdy układ został wyposażony w dodatkowy moduł \texttt{fault\_mux}, który umożliwia wymuszenia uszkodzenia przy pomocy magistrali sterującej \texttt{fault\_en\_bus}.  
 Dzięki temu możliwe jest systematyczne testowanie wszystkich pojedynczych punktów potencjalnej awarii.
 
 \section{Procedura testowa}

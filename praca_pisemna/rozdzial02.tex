@@ -2,14 +2,13 @@
 
 \section{Model błędów i uszkodzeń}
 
-W układach cyfrowych występują dwa główne typy nieprawidłowości: \textbf{uszkodzenia} (\textit{faults}) i \textbf{błędy} (\textit{errors}).  
+W układach cyfrowych występują trzy główne typy nieprawidłowości: \textbf{uszkodzenia} (\textit{faults}), \textbf{błędy} (\textit{errors}) i \textbf{awarie} (\textit{failure}).\cite{JAFRI2014124}
 Uszkodzenie jest zjawiskiem fizycznym lub logicznym powodującym trwałe lub chwilowe odstępstwo działania układu od jego specyfikacji, natomiast błąd jest skutkiem tego uszkodzenia widocznym w danych lub wynikach obliczeń.  
-Jeśli błąd nie zostanie wykryty, może prowadzić do \textbf{awarii} systemu (\textit{failure}), objawiającej się nieprawidłowym działaniem całego układu.\cite{JAFRI2014124}
+Jeśli błąd nie zostanie wykryty, może prowadzić do awarii systemu, objawiającej się nieprawidłowym działaniem całego układu.
 
-Szczególne znaczenie w kontekście współczesnych technologii mają \textbf{błędy przemijające} (\textit{transient faults}). Powstają one w wyniku zjawisk losowych, takich jak oddziaływanie cząstek promieniowania kosmicznego lub promieniowania jonizującego, które chwilowo zaburzają stan logiczny tranzystorów lub węzłów sygnałowych.  
-Takie błędy nie powodują trwałego uszkodzenia struktury układu, ale mogą prowadzić do błędnych wyników obliczeń — szczególnie w urządzeniach reprogramowalnych, takich jak FPGA, oraz w procesorach o wysokiej gęstości integracji.\cite{JAFRI2014124}
-
-Model błędu przemijającego w układach kombinacyjnych często opisuje się jako \textbf{uszkodzenie typu stuck-at}, polegające na trwałym wymuszeniu wartości logicznej „0” lub „1” na danym sygnale, niezależnie od rzeczywistej funkcji logicznej.  
+Szczególne znaczenie w kontekście współczesnych technologii mają \textbf{uszkodzenia (jakie?)} (\textit{transient faults}). Powstają one w wyniku zjawisk losowych, takich jak oddziaływanie cząstek promieniowania kosmicznego lub promieniowania jonizującego, które chwilowo zaburzają stan logiczny tranzystorów lub węzłów sygnałowych.  
+Takie zjawiska nie powodują trwałego uszkodzenia struktury układu, ale mogą prowadzić do błędnych wyników obliczeń — szczególnie w urządzeniach reprogramowalnych, takich jak FPGA.
+Model uszkodzenia (jakiego) w układach kombinacyjnych często opisuje się jako \textbf{uszkodzenie typu stuck-at}, polegające na trwałym wymuszeniu wartości logicznej „0” lub „1” na danym sygnale, niezależnie od rzeczywistej funkcji logicznej.  
 
 \section{Metody wykrywania błędów w układach arytmetycznych}
 
@@ -23,9 +22,9 @@ Kod ten umożliwia wykrycie wszystkich pojedynczych błędów bitowych oraz bł�
 Jego główną wadą jest jednak niska skuteczność w przypadku układów arytmetycznych, gdzie występuje propagacja przeniesień — nawet pojedyncze uszkodzenie może spowodować zmianę kilku bitów, a wynikowy błąd może mieć parzystą krotność i pozostać niewykryty.  
 Ponadto, aby układ był samosprawdzający, cała struktura arytmetyczna musiałaby być przeprojektowana w celu przewidywania i propagacji bitów parzystości.
 
-\subsection{Metoda duplikacji z porównywaniem (DWC)}
+\subsection{Metoda duplikacji z porównywaniem}
 
-Drugim klasycznym podejściem jest \textbf{duplikacja z porównywaniem} (\textit{Dual Modular Redundancy, DWC}), w której funkcjonalny blok obliczeniowy jest zdublowany, a wyniki obu torów są porównywane przez komparator.  
+Drugim klasycznym podejściem jest \textbf{duplikacja z porównywaniem} (\textit{duplication with comparison, DWC}), w której funkcjonalny blok obliczeniowy jest zdublowany, a wyniki obu torów są porównywane przez komparator.  
 Rozwiązanie to pozwala na wykrycie dowolnego pojedynczego błędu w jednym z torów, jednak kosztem dwukrotnego zwiększenia liczby zasobów sprzętowych i poboru mocy.  
 Z tego względu DWC stosuje się głównie w systemach krytycznych, gdzie koszt jest drugorzędny wobec niezawodności.
 

@@ -1,0 +1,22 @@
+E:/Studia/sem7/niduc/kod/residue_mod3.v {1 {vlog -work work -stats=none E:/Studia/sem7/niduc/kod/residue_mod3.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module residue_mod3
+
+Top level modules:
+	residue_mod3
+
+} {} {}} E:/Studia/sem7/niduc/kod/FA.v {1 {vlog -work work -stats=none E:/Studia/sem7/niduc/kod/FA.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module FA
+
+Top level modules:
+	FA
+
+} {} {}} E:/Studia/sem7/niduc/kod/RCA.v {1 {vlog -work work -stats=none E:/Studia/sem7/niduc/kod/RCA.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module RCA
+
+Top level modules:
+	RCA
+
+} {} {}}

@@ -1,0 +1,96 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/intelFPGA/18.1
+vFA
+Z0 !s110 1764278631
+!i10b 1
+!s100 fUbi>g3A`g>XKG7T9XkTm2
+IhDDDzIZ9z2F?@QS5@1nWF0
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+Z2 dE:/Studia/sem7/niduc/kod
+w1764273800
+8E:/Studia/sem7/niduc/kod/FA.v
+FE:/Studia/sem7/niduc/kod/FA.v
+L0 1
+Z3 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z4 !s108 1764278631.000000
+!s107 E:/Studia/sem7/niduc/kod/FA.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/FA.v|
+!i113 1
+Z5 o-work work
+Z6 tCvgOpt 0
+n@f@a
+vmod3_comparator
+!s110 1764278725
+!i10b 1
+!s100 JBTT71DihMPf_b:Z=dzkC0
+ICU8S3LZFVS[DXWUbVi[<F2
+R1
+R2
+w1764278722
+8E:/Studia/sem7/niduc/kod/mod3_comparato.v
+FE:/Studia/sem7/niduc/kod/mod3_comparato.v
+L0 1
+R3
+r1
+!s85 0
+31
+!s108 1764278725.000000
+!s107 E:/Studia/sem7/niduc/kod/mod3_comparato.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/mod3_comparato.v|
+!i113 1
+R5
+R6
+vRCA
+!s110 1764278632
+!i10b 1
+!s100 05fCHZn11kzSQMzHD:GF;3
+I1MPgdE_>?5G35ngn^[1=J1
+R1
+R2
+w1764275516
+8E:/Studia/sem7/niduc/kod/RCA.v
+FE:/Studia/sem7/niduc/kod/RCA.v
+L0 1
+R3
+r1
+!s85 0
+31
+R4
+!s107 E:/Studia/sem7/niduc/kod/RCA.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/RCA.v|
+!i113 1
+R5
+R6
+n@r@c@a
+vresidue_mod3
+R0
+!i10b 1
+!s100 @77`]e4gYJ>Y6jjGo<1e`3
+I7j6:f;aF:Iz]@[GonEijf3
+R1
+R2
+w1764275071
+8E:/Studia/sem7/niduc/kod/residue_mod3.v
+FE:/Studia/sem7/niduc/kod/residue_mod3.v
+L0 1
+R3
+r1
+!s85 0
+31
+R4
+!s107 E:/Studia/sem7/niduc/kod/residue_mod3.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/residue_mod3.v|
+!i113 1
+R5
+R6
