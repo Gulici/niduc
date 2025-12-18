@@ -8,51 +8,159 @@ z2
 !i10f 100
 cModel Technology
 dC:/intelFPGA/18.1
-vFA
-Z0 !s110 1764278631
+vadder_mod3
+Z0 !s110 1766000550
 !i10b 1
-!s100 fUbi>g3A`g>XKG7T9XkTm2
-IhDDDzIZ9z2F?@QS5@1nWF0
+!s100 H;4oRLL`@nX4eD_8eK`kk2
+I82=iUafnM71jI2B9S]2O22
 Z1 VDg1SIo80bB@j0V0VzS_@n1
 Z2 dE:/Studia/sem7/niduc/kod
-w1764273800
-8E:/Studia/sem7/niduc/kod/FA.v
-FE:/Studia/sem7/niduc/kod/FA.v
+Z3 w1765557613
+8E:/Studia/sem7/niduc/kod/adder_mod3.v
+FE:/Studia/sem7/niduc/kod/adder_mod3.v
 L0 1
-Z3 OV;L;10.5b;63
+Z4 OV;L;10.5b;63
 r1
 !s85 0
 31
-Z4 !s108 1764278631.000000
+Z5 !s108 1766000550.000000
+!s107 E:/Studia/sem7/niduc/kod/adder_mod3.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/adder_mod3.v|
+!i113 1
+Z6 o-work work
+Z7 tCvgOpt 0
+vCLA
+R0
+!i10b 1
+!s100 [TZb;BFPeC@f0fDU@c5a^3
+I:8KWH2U5`e3RWT<e3XaH41
+R1
+R2
+w1765555719
+8E:/Studia/sem7/niduc/kod/CLA.v
+FE:/Studia/sem7/niduc/kod/CLA.v
+L0 2
+R4
+r1
+!s85 0
+31
+R5
+!s107 E:/Studia/sem7/niduc/kod/CLA.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/CLA.v|
+!i113 1
+R6
+R7
+n@c@l@a
+vCLA_CarryGen
+R0
+!i10b 1
+!s100 bgA0YO@4H:0T[78]jSiL83
+IiZN4;7al;DkOcgK;^6^6=3
+R1
+R2
+R3
+8E:/Studia/sem7/niduc/kod/CLA_CarryGen.v
+FE:/Studia/sem7/niduc/kod/CLA_CarryGen.v
+L0 2
+R4
+r1
+!s85 0
+31
+R5
+!s107 E:/Studia/sem7/niduc/kod/CLA_CarryGen.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/CLA_CarryGen.v|
+!i113 1
+R6
+R7
+n@c@l@a_@carry@gen
+vFA
+R0
+!i10b 1
+!s100 oko;`ofTh7jic^TgPLa3D3
+IIHkzbO8Em@8XB8Ud4BT5l0
+R1
+R2
+w1765552490
+8E:/Studia/sem7/niduc/kod/FA.v
+FE:/Studia/sem7/niduc/kod/FA.v
+L0 2
+R4
+r1
+!s85 0
+31
+R5
 !s107 E:/Studia/sem7/niduc/kod/FA.v|
 !s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/FA.v|
 !i113 1
-Z5 o-work work
-Z6 tCvgOpt 0
+R6
+R7
 n@f@a
-vmod3_comparator
-!s110 1764278725
+vfault_mux
+R0
 !i10b 1
-!s100 JBTT71DihMPf_b:Z=dzkC0
-ICU8S3LZFVS[DXWUbVi[<F2
+!s100 XG_GPPg44VL?AKHVAF9f[0
+IoTUTiKNC3JF[7n?HzYbWn1
 R1
 R2
-w1764278722
-8E:/Studia/sem7/niduc/kod/mod3_comparato.v
-FE:/Studia/sem7/niduc/kod/mod3_comparato.v
+w1765551913
+8E:/Studia/sem7/niduc/kod/fault_mux.v
+FE:/Studia/sem7/niduc/kod/fault_mux.v
 L0 1
-R3
+R4
 r1
 !s85 0
 31
-!s108 1764278725.000000
-!s107 E:/Studia/sem7/niduc/kod/mod3_comparato.v|
-!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/mod3_comparato.v|
-!i113 1
 R5
+!s107 E:/Studia/sem7/niduc/kod/fault_mux.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/fault_mux.v|
+!i113 1
 R6
+R7
+vmod3_comparator
+R0
+!i10b 1
+!s100 n15B0PM?jgm==dz?dQNX_1
+ILGP<IDkCI[b2<YbN7j4LE1
+R1
+R2
+w1766000545
+8E:/Studia/sem7/niduc/kod/mod3_comparator.v
+FE:/Studia/sem7/niduc/kod/mod3_comparator.v
+L0 1
+R4
+r1
+!s85 0
+31
+R5
+!s107 E:/Studia/sem7/niduc/kod/mod3_comparator.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/mod3_comparator.v|
+!i113 1
+R6
+R7
+vPGA
+R0
+!i10b 1
+!s100 WOS3G^Gi0`HBcZiG2e@Yc2
+I5IoTK94a_j_CKdYaONe;Z3
+R1
+R2
+w1765555464
+8E:/Studia/sem7/niduc/kod/PGA.v
+FE:/Studia/sem7/niduc/kod/PGA.v
+L0 2
+R4
+r1
+!s85 0
+31
+R5
+!s107 E:/Studia/sem7/niduc/kod/PGA.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/PGA.v|
+!i113 1
+R6
+R7
+n@p@g@a
 vRCA
-!s110 1764278632
+R0
 !i10b 1
 !s100 05fCHZn11kzSQMzHD:GF;3
 I1MPgdE_>?5G35ngn^[1=J1
@@ -62,35 +170,100 @@ w1764275516
 8E:/Studia/sem7/niduc/kod/RCA.v
 FE:/Studia/sem7/niduc/kod/RCA.v
 L0 1
-R3
+R4
 r1
 !s85 0
 31
-R4
+R5
 !s107 E:/Studia/sem7/niduc/kod/RCA.v|
 !s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/RCA.v|
 !i113 1
-R5
 R6
+R7
 n@r@c@a
 vresidue_mod3
 R0
 !i10b 1
-!s100 @77`]e4gYJ>Y6jjGo<1e`3
-I7j6:f;aF:Iz]@[GonEijf3
+!s100 @fWD<JMBkQ8[a9k]f@54b2
+ITXOXBT@giP6i<L=7mV4_41
 R1
 R2
-w1764275071
+w1765978927
 8E:/Studia/sem7/niduc/kod/residue_mod3.v
 FE:/Studia/sem7/niduc/kod/residue_mod3.v
 L0 1
-R3
+R4
 r1
 !s85 0
 31
-R4
+R5
 !s107 E:/Studia/sem7/niduc/kod/residue_mod3.v|
 !s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/residue_mod3.v|
 !i113 1
-R5
 R6
+R7
+vtb_CLA
+R0
+!i10b 1
+!s100 Hjg:dQaCG53KbEIY;o^5[1
+I?T7FGa^SNCXAHgN><b=XT1
+R1
+R2
+w1765993561
+8E:/Studia/sem7/niduc/kod/tb_CLA.v
+FE:/Studia/sem7/niduc/kod/tb_CLA.v
+L0 3
+R4
+r1
+!s85 0
+31
+R5
+!s107 E:/Studia/sem7/niduc/kod/tb_CLA.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/tb_CLA.v|
+!i113 1
+R6
+R7
+ntb_@c@l@a
+vtb_RCA
+R0
+!i10b 1
+!s100 n82;MF_iEG6Xml4:7cfIZ0
+Ib;:AQeK^koazYfDXB9TK>3
+R1
+R2
+w1765992735
+8E:/Studia/sem7/niduc/kod/tb_RCA.v
+FE:/Studia/sem7/niduc/kod/tb_RCA.v
+L0 4
+R4
+r1
+!s85 0
+31
+R5
+!s107 E:/Studia/sem7/niduc/kod/tb_RCA.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/tb_RCA.v|
+!i113 1
+R6
+R7
+ntb_@r@c@a
+vtb_residue_mod3
+R0
+!i10b 1
+!s100 Zn:B23g6PkWoHO_Mf0jg?1
+I^KQhSlK1R22VJaLOJAMC]3
+R1
+R2
+w1765979169
+8E:/Studia/sem7/niduc/kod/tb_residue_mod3.v
+FE:/Studia/sem7/niduc/kod/tb_residue_mod3.v
+L0 4
+R4
+r1
+!s85 0
+31
+R5
+!s107 E:/Studia/sem7/niduc/kod/tb_residue_mod3.v|
+!s90 -reportprogress|300|-work|work|-stats=none|E:/Studia/sem7/niduc/kod/tb_residue_mod3.v|
+!i113 1
+R6
+R7

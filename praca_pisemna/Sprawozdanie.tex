@@ -282,6 +282,25 @@ captionpos=t
 
 \makeatother
 
+\lstdefinelanguage{Verilog}{
+    keywords={
+        module, endmodule, input, output, wire, reg,
+        always, always_comb, always_ff,
+        begin, end, if, else, case, endcase,
+        for, while, generate, endgenerate,
+        assign, parameter, localparam,
+        initial, posedge, negedge
+    },
+    keywordstyle=\color{blue}\bfseries,
+    sensitive=true,
+    comment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    commentstyle=\color{darkgray},
+    stringstyle=\color{red},
+    morestring=[b]",
+}
+
+
 %%\definecolor{red}{rgb}{0.6,0,0} % for strings
 %%\definecolor{blue}{rgb}{0,0,0.6}
 %%\definecolor{green}{rgb}{0,0.8,0}
@@ -889,10 +908,10 @@ Przedmiot: & {\bfseries \@specjalnosc}\\
 \listoffigures*
 \clearpage
 % SPIS TABEL (zostanie wygenerowany automatycznie)
-\pdfbookmark[0]{Spis tabel}{spisTabel.1} %
+% \pdfbookmark[0]{Spis tabel}{spisTabel.1} %
 %%\phantomsection
 %%\addcontentsline{toc}{chapter}{Spis tabel}
-\listoftables*
+% \listoftables*
 \clearpage
 % SPIS LISTINGÓW (zostanie wygenerowany automatycznie)
 % \pdfbookmark[0]{Spis listingów}{spisListingow.1} %
@@ -926,8 +945,8 @@ Przedmiot: & {\bfseries \@specjalnosc}\\
 %       Nazwę pliku przygotowanej biblioteki wpisuje się bez rozszerzenia .bib
 %       (linia poniżej załaduje rekordy z pliku "dokumentacja.bib")
 \bibliography{dokumentacja}
-% \appendix
-% \include{dodatekA}
+\appendix
+\include{dodatekA}
 % \include{dodatekB}
 
 % Jeśli w pracy pojawiać się ma indeks, należy odkomentować poniższe linie

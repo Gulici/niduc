@@ -1,0 +1,27 @@
+# === START SYMULACJI ===
+# === RCA ref ===
+# TP=0
+# TN=256
+# FP=0
+# FN=0
+# === RCA ===
+# TP=2048
+# TN=2048
+# FP=0
+# FN=0
+# === Mod3 Adder ===
+# TP=0
+# TN=1024
+# FP=1024
+# FN=0
+# === Komparator ===
+# TP=0
+# TN=768
+# FP=256
+# FN=0
+# === Generator reszt mod3 ===
+# TP=0
+# TN=2048
+# FP=2048
+# FN=0
+# === KONIEC SYMULACJI ===

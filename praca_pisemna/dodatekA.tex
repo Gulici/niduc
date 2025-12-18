@@ -1,3 +1,68 @@
-\chapter{Instrukcja wdrożeniowa}
-Jeśli praca skończyła się wykonaniem jakiegoś oprogramowania, to w dodatku powinna pojawić się instrukcja wdrożeniowa (o tym jak skompilować/zainstalować to oprogramowanie).
-Przydałoby się również krótkie ,,\emph{how to}'' (jak uruchomić system i coś w nim zrobić -- zademonstrowane na jakimś najprostszym przypadku użycia). Można z tego zrobić osobny dodatek.
+\chapter{Listingi źródłowe}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Moduł multipleksera wstrzykującego uszkodzenie},
+    label={lst:fault_mux}
+]{kod/fault_mux.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Moduł sumatora pełnego},
+    label={lst:FA}
+]{kod/FA.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Moduł sumatora 4 bitowego RCA},
+    label={lst:RCA}
+]{kod/RCA.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Moduł sumatora częściowego z sygnałami generacji i przeniesienia},
+    label={lst:PGA}
+]{kod/PGA.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Moduł generatora przeniesień w CLA},
+    label={lst:CLA_CarryGen}
+]{kod/CLA_CarryGen.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Moduł sumatora 4 bitowego CLA},
+    label={lst:CLA}
+]{kod/CLA.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Moduł sumatora modulo~3},
+    label={lst:adder_mod3}
+]{kod/adder_mod3.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Moduł 5 bitowego generatora reszt modulo~3},
+    label={lst:residue_mod3}
+]{kod/residue_mod3.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Moduł komparatora modulo~3},
+    label={lst:mod3_comparator}
+]{kod/mod3_comparator.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Testbench układu samosprawdzającego z sumatorem RCA},
+    label={lst:tb_rca}
+]{kod/tb_rca.v}
+
+\lstinputlisting[
+    language=Verilog,
+    caption={Testbench układu samosprawdzającego z sumatorem CLA},
+    label={lst:tb_cla}
+]{kod/tb_cla.v}
+

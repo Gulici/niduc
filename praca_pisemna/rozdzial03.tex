@@ -1,6 +1,7 @@
-\chapter{Plan eksperymentu/Symulacja}
-
+\chapter{Plan eksperymentu}
 \section{Struktura układu}
+
+Badany układ stanowi przykład arytmetycznego układu samosprawdzającego opartego na kodzie resztowym modulo~3. Jego struktura została zaprojektowana w postaci dwóch równoległych torów obliczeniowych: toru głównego realizującego operację sumowania w arytmetyce binarnej oraz toru kontrolnego pracującego w arytmetyce modulo~3. Ogólną strukturę układu przedstawiono na rys.~\ref{fig:model}.
 
 \begin{figure}[h]
     \centering
@@ -10,46 +11,165 @@ on-line error detection.\cite{JAFRI2014124}}
     \label{fig:model}
 \end{figure}
 
-\subsection{Schematy}
+W badanym rozwiązaniu obliczenia wykonywane są równolegle w dwóch torach:
 
-\begin{figure}[h]
+\begin{itemize}
+    \item torze głównym, w którym realizowane jest klasyczne sumowanie binarne,
+    \item torze kontrolnym, w którym operacje wykonywane są w arytmetyce modulo~3.
+\end{itemize}
+
+Porównanie wyników obu torów umożliwia wykrycie rozbieżności będących skutkiem uszkodzeń logicznych w strukturze układu.
+
+\subsection{Sumator i generator reszt modulo 3}
+
+Tor kontrolny układu realizuje operacje w arytmetyce resztowej modulo~3, przy czym reszty operandów wejściowych $A_{\bmod 3}$ oraz $B_{\bmod 3}$ są w badanym modelu dostarczane bezpośrednio na wejście toru kontrolnego i nie są wyznaczane wewnątrz układu.
+
+Generator reszty modulo~3 dla wyniku sumowania binarnego oblicza wartość
+\[
+S_{\bmod 3} = (A + B) \bmod 3
+\]
+na podstawie pięciobitowego wyjścia głównego toru arytmetycznego. Struktura generatora oparta jest na kaskadzie sumatorów pełnych, zgodnie z rozwiązaniami opisanymi w artykule~\cite{JAFRI2014124}. Schemat generatora reszty modulo~3 zastosowany w eksperymencie przedstawiono na rys.~\ref{fig:5bitmod3}a).
+
+Zastosowana architektura wykorzystuje własność sumatora pełnego polegającą na redukcji trzech sygnałów binarnych do dwóch. Kolejne stopnie generatora stopniowo zmniejszają liczbę sygnałów reprezentujących wartość wejściową, aż do uzyskania dwubitowej reprezentacji reszty modulo~3. W generatorze reszty dla pięciobitowej wartości zastosowano cztery bloki FA. Struktura ta jest równoważna generatorowi sześciobitowemu, przy czym najwyższy bit wejściowy jest na stałe ustawiony na wartość logiczną~1. Odzwierciedlenie w kodzie widoczne jest na listingu~\ref{lst:residue_mod3}.
+
+\begin{figure}[htb]
     \centering
-    \includegraphics[width=0.75\textwidth]{img04/modulo3_6bit.png}
-    \caption{Schemat 6-bit generatora reszt modulo 3.}
-    \label{fig:6bitmod3}
+    \begin{tabular}{@{}ll@{}}
+    a) & b) \\
+    \vtop{\vskip-2ex\hbox{{\includegraphics[width=0.70\textwidth]{img04/modulo3_5bit.png}}}} &
+    \vtop{\vskip-2ex\hbox{{\includegraphics[width=0.20\textwidth]{img04/addmod3.pdf}}}}
+    \end{tabular}
+    \caption{a) Schemat 5 bitowego generatora reszt mod3, b) Sumator mod3}
+    \label{fig:5bitmod3}
 \end{figure}
 
+Sumator modulo~3 realizuje operację
+\[
+(A_{\bmod 3} + B_{\bmod 3}) \bmod 3
+\]
+i stanowi element toru kontrolnego odpowiedzialny za wyznaczenie reszty kontrolnej na podstawie operandów wejściowych. Jego struktura wewnętrzna jest analogiczna do generatora reszty modulo~3 dla czterech sygnałów wejściowych i również opiera się na kaskadzie sumatorów pełnych. W implementacji~\ref{lst:adder_mod3} wykorzystano dwa bloki FA. Schemat sumatora modulo~3 przedstawiono na rys.~\ref{fig:5bitmod3}b).
+
+
+\subsection{Komparator reszt modulo 3}
+
+Komparator reszt modulo~3 odpowiada za porównanie wartości reszt uzyskanych w torze głównym oraz torze kontrolnym. W odróżnieniu od klasycznego porównania binarnego, układ ten musi uwzględniać \textbf{podwójną reprezentację zera}, charakterystyczną dla kodu resztowego modulo~3, w której kombinacje bitowe \texttt{00} oraz \texttt{11} reprezentują tę samą wartość reszty równą~0.
+
+Wyjście komparatora $c$ przyjmuje wartość:
+\[
+c = 0 \quad \mathrm{(reszty\ równe)}, \qquad
+c = 1 \quad \mathrm{(reszty\ różne)}.
+\]
+
+
+Zgodnie z pracą \cite{JAFRI2014124}, funkcja logiczna realizowana przez komparator reszt modulo~3 dana jest zależnością:
+
+\begin{equation}
+c =
+(\bar{y}_1 y_0) \oplus (\bar{x}_1 x_0)
++
+(y_1 \bar{y}_0) \oplus (x_1 \bar{x}_0).
+\end{equation}
+
+Zastosowana funkcja w sposób jawny eliminuje wpływ podwójnej reprezentacji zera, ponieważ kombinacje odpowiadające wartościom \texttt{00} oraz \texttt{11} nie aktywują żadnego z iloczynów logicznych. Dzięki temu sygnał wyjściowy komparatora wskazuje wyłącznie na rzeczywistą niezgodność wartości reszt modulo~3, niezależnie od ich binarnej reprezentacji. Bezpośrednia implementacja pokazana jest na listingu~\ref{lst:mod3_comparator}.
+
+\subsection{Badane układy arytmetyczne}
+
+W ramach eksperymentu analizie poddano dwa czterobitowe układy sumujące: sumator kaskadowy typu Ripple Carry Adder (RCA) oraz sumator z przyspieszonym przeniesieniem typu Carry Lookahead Adder (CLA).
+
+Sumator RCA zbudowany jest z czterech sumatorów pełnych połączonych kaskadowo. Każdy stopień realizuje operację sumowania jednego bitu operandów wraz z przeniesieniem z poprzedniego stopnia. Sygnał przeniesienia propagowany jest sekwencyjnie przez wszystkie sumatory pełne, co powoduje, że czas ustalania wyniku zależy liniowo od liczby bitów. Schemat badanego sumatora RCA przedstawiono na rys.~\ref{fig:rca}, a implementacje na listingu~\ref{lst:RCA}.
+
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.75\textwidth]{img04/schemat_impl.png}
-    \caption{Schemat samosprawdzającego układu arytmetyczego mod3}
-    \label{fig:układ}
+    \includegraphics[width=0.85\textwidth]{img04/rca.pdf}
+    \caption{Schemat układu sumatora 4-bitowego RCA}
+    \label{fig:rca}
+\end{figure}
+
+Sumator CLA posiada odmienną strukturę wewnętrzną. Składa się on z zestawu sumatorów częściowych~\ref{fig:pga}~\ref{lst:PGA}, które dla każdego bitu operandów generują sygnały sumy $S$, propagacji $P$ oraz generacji $G$. Na podstawie sygnałów $P$ i $G$ wyznaczane są przeniesienia w dedykowanym module obliczania przeniesień. W pracy przedstawiono również schemat sumatora częściowego zrealizowanego na poziomie bramek logicznych. Schemat całego układu CLA pokazano na rys.~\ref{fig:cla}, implementacja znajduje się na listingu~\ref{lst:tb_cla}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img04/pga.pdf}
+    \caption{Schemat układu sumatora częściowego z wyjściami generacji i propagacji}
+    \label{fig:pga}
+\end{figure}
+
+Moduł obliczania przeniesień w sumatorze CLA realizuje zależności:
+\[
+C_{1} = G_{0} + P_{0} \cdot C_{0}
+\]
+\[
+C_{2} = G_{1} + P_{1} \cdot C_{1}
+\]
+\[
+C_{3} = G_{2} + P_{2} \cdot C_{2}
+\]
+\[
+C_{4} = G_{3} + P_{3} \cdot C_{3}
+\]
+
+gdzie $C_{0}$ oznacza wejściowe przeniesienie do sumatora.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{img04/cla.pdf}
+    \caption{Schemat układu sumatora 4-bitowego CLA}
+    \label{fig:cla}
 \end{figure}
 
 \newpage
-\section{Model uszkodzeń i symulacja}
 
-Symulacja została zaprojektowana tak, aby odwzorować pojedyncze uszkodzenia przemijające (ang. \textit{transient faults}), których źródłem mogą być cząstki promieniowania kosmicznego powodujące chwilową zmianę stanu logicznego.  
-Każde takie uszkodzenie modelowane jest w postaci sklejenia stanu logicznego \textbf{stuck-at}, polegającego na wymuszeniu stałej wartości logicznej 0 lub 1 na wyjściu danego układu logicznego.
+\section{Implementacja modelu symulacyjnego}
 
-W modelu symulacyjnym każdy układ został wyposażony w dodatkowy moduł \texttt{fault\_mux}, który umożliwia wymuszenia uszkodzenia przy pomocy magistrali sterującej \texttt{fault\_en\_bus}.  
-Dzięki temu możliwe jest systematyczne testowanie wszystkich pojedynczych punktów potencjalnej awarii.
+Model badanego układu został zaimplementowany w języku opisu sprzętu \textit{Verilog} i symulowany w środowisku \textit{ModelSim}. Implementacja obejmuje zarówno tor główny realizujący sumowanie w arytmetyce binarnej, jak i tor kontrolny oparty na arytmetyce resztowej modulo~3. Każdy z bloków przedstawionych wcześniej w pracy posiada odpowiadający mu model strukturalny wykorzystywany w symulacji.
 
-\section{Procedura testowa}
+Projekt przyjęto w postaci hierarchicznej. Elementarne komponenty, takie jak sumatory pełne czy sumatory częściowe, zostały opisane jako niezależne moduły i następnie złożone w bardziej złożone struktury, w tym sumatory RCA i CLA. Takie podejście umożliwia jednoznaczne wskazanie punktów potencjalnych uszkodzeń oraz ich systematyczne wstrzykiwanie.
 
-Symulacja obejmuje pełne przeszukanie przestrzeni wejść i uszkodzeń:
-\[
-\textit{Wejścia} \times \textit{Punkty iniekcji} \times \{\textit{stuck-at-0, stuck-at-1}\}.
-\]
-Dla każdej kombinacji przeprowadzane są dwa przebiegi:
-\begin{enumerate}
-    \item \textbf{Referencyjny} - bez aktywnego uszkodzenia, w celu uzyskania poprawnego wyniku.
-    \item \textbf{Testowy} - z aktywnym pojedynczym uszkodzeniem (\texttt{fault\_en}=1), w celu porównania wyników toru głównego i kontrolnego.
-\end{enumerate}
+Modele układów mają charakter funkcjonalny i są wykorzystywane wyłącznie do analizy poprawności logicznej oraz skuteczności detekcji błędów.
 
-Na podstawie porównania wyników klasyfikuje się przypadki jako:
+ zaprojektowana w celu analizy odporności układu na pojedyncze uszkodzenia przemijające (ang.~\textit{transient faults}), których fizycznym źródłem mogą być m.in.\ cząstki promieniowania kosmicznego powodujące chwilową zmianę stanu logicznego.  
+Na potrzeby symulacji każde uszkodzenie modelowane jest w postaci sklejenia stanu logicznego typu \emph{stuck-at}, polegającego na wymuszeniu stałej wartości logicznej~0 lub~1 na wyjściu wybranego komponentu.
+
+Przyjęto założenie, że uszkodzeniu może ulec dowolny sygnał wyjściowy elementarnego komponentu budującego badany układ.  
+Za komponenty elementarne uznano:
 \begin{itemize}
-    \item \textbf{Błąd wykryty} - wynik błędny poprawnie zgłoszony przez komparator,
-    \item \textbf{Błąd niewykryty (false negative)} - wynik błędny uznany za poprawny,
-    \item \textbf{Błąd fałszywy (false positive)} - wynik poprawny błędnie zidentyfikowany jako błędny.
+    \item sumatory pełne (FA)~\ref{lst:FA} w strukturze sumatora RCA, generatora reszt modulo~3 oraz sumatora modulo~3,
+    \item sumatory częściowe~\ref{lst:PGA} w strukturze sumatora CLA,
+    \item moduł generowania przeniesień~\ref{lst:CLA_CarryGen} w sumatorze CLA,
+    \item moduł komparatora modulo~3~\ref{lst:mod3_comparator}.
+\end{itemize}
+
+Każdy z wymienionych komponentów został w modelu symulacyjnym wyposażony w dodatkowy moduł \texttt{fault\_mux}~\ref{lst:fault_mux}, umożliwiający wymuszenie uszkodzenia na jego wyjściu. Sterowanie iniekcją błędu realizowane jest przy pomocy wspólnej magistrali \texttt{fault\_en\_bus}, co pozwala na jednoznaczne i systematyczne testowanie wszystkich pojedynczych punktów potencjalnej awarii.
+
+\subsection{Zakres testów}
+
+Testy wykonywane są dla wszystkich 4-bitowych kombinacji operandów $A$ i $B$.  
+Dla każdej konfiguracji wejść wyznaczana jest referencyjna suma binarna $S_{\mathrm{ref}}$ oraz generowany jest wynik badanego układu wraz z sygnałem błędu \texttt{err} pochodzącym z toru kontrolnego.
+
+Analiza prowadzona jest dla następujących wariantów pracy układu:
+\begin{itemize}
+    \item brak aktywnego uszkodzenia,
+    \item pojedyncze uszkodzenie typu \emph{stuck-at-0},
+    \item pojedyncze uszkodzenie typu \emph{stuck-at-1}.
+\end{itemize}
+
+W przypadku testów z iniekcją błędu aktywowany jest dokładnie jeden sygnał odpowiadający wyjściu wybranego komponentu elementarnego. Każde uszkodzenie analizowane jest niezależnie dla pełnego zbioru kombinacji wejściowych.
+
+\subsection{Kryterium oceny}
+
+Dla każdej kombinacji wejść wynik badanego układu porównywany jest z wartością referencyjną $S_{\mathrm{ref}}$, a następnie analizowany jest stan sygnału \texttt{err}. Na tej podstawie przypadki klasyfikowane są do jednej z czterech kategorii:
+\begin{itemize}
+    \item \textbf{Błąd wykryty (TP, \emph{True Positive})} — wynik niezgodny z referencyjnym oraz \texttt{err = 1},
+    \item \textbf{Brak błędu (TN, \emph{True Negative})} — wynik zgodny z referencyjnym oraz \texttt{err = 0},
+    \item \textbf{Fałszywy alarm (FP, \emph{False Positive})} — wynik zgodny z referencyjnym oraz \texttt{err = 1},
+    \item \textbf{Błąd niewykryty (FN, \emph{False Negative})} — wynik niezgodny z referencyjnym oraz \texttt{err = 0}.
+\end{itemize}
+
+
+\subsection{Cel badania}
+
+Celem przeprowadzonych testów jest:
+\begin{itemize}
+    \item potwierdzenie, że żadne pojedyncze uszkodzenie nie prowadzi do niewykrytego błędu arytmetycznego,
+    \item ilościowa ocena liczby fałszywych alarmów generowanych przez układ kontrolny.
 \end{itemize}

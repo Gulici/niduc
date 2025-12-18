@@ -1,8 +1,8 @@
-module residue_mod3 #(
+module adder_mod3 #(
 	parameter NG = 128,
 	parameter GID_BASE = 0
 )(
-	input wire [4:0] A,
+	input wire [3:0] X,
 	input wire [NG-1:0] fault_en_bus,
 	input wire fault_val,
 	output wire [1:0] R

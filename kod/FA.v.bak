@@ -1,7 +1,7 @@
 module FA #(
 	parameter NG = 128,
 	parameter GID_SUM = 0,
-	parameter GID_COUT = 1,
+	parameter GID_COUT = 1
 )(
 	input wire a, b, cin,
 	input wire [NG-1:0] fault_en_bus,

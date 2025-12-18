@@ -12,23 +12,24 @@ W celu ograniczenia wpływu takich błędów opracowano szereg metod detekcji i 
 
 \newpage
 \section{Założenia eksperymentu}
-W eksperymencie zbudowano model układu kombinacyjnego składającego się z:
+W ramach eksperymentu zbudowano model kombinacyjnego układu arytmetycznego składającego się z:
 \begin{itemize}
-    \item głównego sumatora czterobitowego,
-    \item modułu generującego resztę z dzielenia przez 3 dla pięciobitowej liczby reprezentującej sumę wejść,
-    \item sumatora kontrolnego realizującego operacje w arytmetyce modulo 3,
-    \item modułów generujących resztę mod 3 dla operandów wejściowych,
-    \item komparatora porównującego reszty wyniku z obu torów.
+    \item czterobitowego sumatora głównego (RCA i CLA),
+    \item generatora reszty modulo~3 z pięciobitowego wyniku sumowania,
+    \item sumatora kontrolnego realizującego operacje w arytmetyce modulo~3,
+    \item komparatora porównującego reszty toru głównego i kontrolnego.
 \end{itemize}
 
-Kluczowym elementem jest możliwość symulowania pojedynczych uszkodzeń w strukturze układu spowodowanych promieniowaniem kosmicznym.
-Dla każdego wprowadzonego uszkodzenia przeprowadzana jest pełna analiza działania układu, obejmująca porównanie wyniku obliczeń głównego toru arytmetycznego z wynikiem toru kontrolnego modulo 3.
+Do modelu wprowadzono mechanizm wstrzykiwania pojedynczych uszkodzeń logicznych typu \emph{stuck-at}, umożliwiający wymuszenie stałej wartości logicznej na wyjściu wybranego elementu układu. Każde uszkodzenie aktywowane jest indywidualnie i analizowane niezależnie.
 
-Otrzymane wyniki klasyfikowane są w trzech kategoriach:
+Dla każdej kombinacji wejść oraz aktywnego uszkodzenia porównywany jest wynik toru głównego z wartością referencyjną, a sygnał błędu generowany przez tor kontrolny służy do klasyfikacji zachowania układu.
+
+Wyniki symulacji klasyfikowane są jako:
 \begin{itemize}
-\item \textbf{błąd wykryty} – wynik błędny został poprawnie zidentyfikowany przez komparator,
-\item \textbf{błąd niewykryty (false negative)} – wynik błędny został uznany za poprawny,
-\item \textbf{błąd fałszywy (false positive)} – wynik poprawny został zidentyfikowany jako błędny.
+    \item \textbf{błąd wykryty (true positive)} -- wynik arytmetyczny jest niepoprawny, a układ zgłasza błąd,
+    \item \textbf{błąd niewykryty (false negative)} -- wynik arytmetyczny jest niepoprawny, lecz błąd nie został zgłoszony,
+    \item \textbf{fałszywy alarm (false positive)} -- wynik arytmetyczny jest poprawny, lecz układ błędnie zgłasza błąd,
+    \item \textbf{brak błędu (true negative)} -- wynik poprawny i brak sygnalizacji błędu.
 \end{itemize}
 
 Takie podejście pozwala na ilościową ocenę skuteczności detekcji błędów przez układ samosprawdzający oraz identyfikację elementów najbardziej wrażliwych na uszkodzenia logiczne.

@@ -1,0 +1,344 @@
+`timescale 1ns/1ps
+
+module tb_CLA;
+
+    //--------------------------------------------------------------------------
+    // Parametry
+    //--------------------------------------------------------------------------
+    localparam NG = 128;     // liczba mo?liwych GID
+    // 8 mozliwych uszkodzen w RCA
+    localparam GID_CLA_BASE      = 0;
+    localparam GID_CLA_END       = 15;
+    // 4 mozliwe uszkodzenia w adder mod3
+    localparam GID_MOD3_BASE     = 20;
+    localparam GID_MOD3_END      = 23;
+    // 2 mozliwe uszkodzenia w komparatorze
+    localparam GID_CMP_BASE      = 30;
+    localparam GID_CMP_END       = 31;
+    // 8 mozliwych uszkodzen w generatorze reszty mod 3
+    localparam GID_RESIDUE_BASE	 = 40;
+    localparam GID_RESIDUE_END	 = 47;
+    //--------------------------------------------------------------------------
+    // Sygna?y testbench
+    //--------------------------------------------------------------------------
+    reg  [3:0] A, B;
+    reg  [1:0] A_mod3, B_mod3;
+    reg        Cin;
+
+    reg  [NG-1:0] fault_en_bus;
+    reg           fault_val;
+
+    reg [4:0] ref_sum;
+
+    wire [4:0] Sout;
+    wire       err;
+
+    //--------------------------------------------------------------------------
+    // DUT
+    //--------------------------------------------------------------------------
+
+    // 1) CLA
+    wire [3:0] cla_s;
+    wire       cla_cout;
+
+    CLA #(
+        .NG(NG),
+        .GID_BASE(GID_CLA_BASE)
+    ) dut_cla (
+        .X(A),
+        .Y(B),
+        .Cin(Cin),
+        .fault_en_bus(fault_en_bus),
+        .fault_val(fault_val),
+        .S(cla_s),
+        .Cout(cla_cout)
+    );
+
+    // po??czone wyj?cie CLA jako 5-bit
+    assign Sout = {cla_cout, cla_s};
+
+
+    // 2) RESZTA MOD3 z wyniku CLA
+    wire [1:0] Rsum_mod3;
+
+    residue_mod3 #(
+	.NG(NG),
+        .GID_BASE(GID_RESIDUE_BASE)
+    ) dut_mod3_sum (
+        .A(Sout),
+        .R(Rsum_mod3),
+	.fault_en_bus(fault_en_bus),
+        .fault_val(fault_val)
+    );
+
+    // 3) SUMA RESZT (Amod3 + Bmod3)
+    wire [1:0] R_ab_mod3;
+
+    adder_mod3 #(
+        .NG(NG),
+        .GID_BASE(GID_MOD3_BASE)
+    ) dut_mod3_add (
+        .X(A_mod3),
+	.Y(B_mod3),
+        .fault_en_bus(fault_en_bus),
+        .fault_val(fault_val),
+        .R(R_ab_mod3)
+    );
+
+    // 4) PORÓWNANIE RESZT
+    mod3_comparator #(
+        .NG(NG),
+        .GID_OUT(GID_CMP_BASE)
+    ) dut_cmp (
+        .X(Rsum_mod3),
+        .Y(R_ab_mod3),
+        .fault_en_bus(fault_en_bus),
+        .fault_val(fault_val),
+        .eq_err(err)
+    );
+
+    //--------------------------------------------------------------------------
+    // test wszystkich uszkodzen
+    //--------------------------------------------------------------------------
+    integer i;
+    integer sa;   // stuck-at
+    integer a, b, ra, rb;
+
+    integer tp, fp, fn, tn;
+
+    initial begin
+        $display("=== START SYMULACJI ===");
+
+        Cin = 0;
+        fault_en_bus = 0;
+        fault_val    = 0;
+	tp = 0; tn = 0; fp = 0; fn = 0;
+
+	 // przej?cie po wszystkich wej?ciach A,B
+         for (a = 0; a < 16; a = a + 1) begin
+             for (b = 0; b < 16; b = b + 1) begin
+
+		A = a;
+		B = b;
+		ref_sum = A + B + Cin;
+
+		A_mod3 = A % 3;
+		B_mod3 = B % 3;
+
+		#10; // ustalenie sygna?ów
+
+		if ((ref_sum != Sout) && (err == 0)) begin
+			fn = fn + 1;
+			$display(
+			"NIEWYKRYTY BLAD ARYTMETYCZNY: GID=%0d SA=%0d A=%0d B=%0d Cin=%0d | ref=%0d Sout=%0d",
+			i, sa, A, B, Cin, ref_sum, Sout
+			);
+		end
+		else if ((ref_sum != Sout) && (err == 1)) tp = tp + 1;
+		else if ((ref_sum == Sout) && (err == 1)) fp = fp + 1;
+		else if ((ref_sum == Sout) && (err == 0)) tn = tn + 1;
+	    end
+	end
+
+	$display("=== CLA ref ===");
+	$display("TP=%0d", tp);
+	$display("TN=%0d", tn);
+	$display("FP=%0d", fp);
+	$display("FN=%0d", fn);
+
+	tp = 0; tn = 0; fp = 0; fn = 0;
+
+        // Test: wszystkie uszkodzenia ukladu arytmetycznego
+        for (i = GID_CLA_BASE; i <= GID_CLA_END; i = i + 1) begin
+
+            // test stuck-at-0 i stuck-at-1
+            for (sa = 0; sa <= 1; sa = sa + 1) begin
+
+                fault_val = sa;
+
+                // aktywuj jedno uszkodzenie
+                fault_en_bus = 0;
+                fault_en_bus[i] = 1;
+		
+
+                // przej?cie po wszystkich wej?ciach A,B
+                for (a = 0; a < 16; a = a + 1) begin
+                    for (b = 0; b < 16; b = b + 1) begin
+
+                        A = a;
+                        B = b;
+			ref_sum = A + B + Cin;
+
+                        A_mod3 = A % 3;
+                        B_mod3 = B % 3;
+
+                        #10; // ustalenie sygna?ów
+
+                        if ((ref_sum != Sout) && (err == 0)) begin
+			    fn = fn + 1;
+    			    $display(
+        			"NIEWYKRYTY BLAD ARYTMETYCZNY: GID=%0d SA=%0d A=%0d B=%0d Cin=%0d | ref=%0d Sout=%0d",
+        			i, sa, A, B, Cin, ref_sum, Sout
+    			    );
+			end
+			else if ((ref_sum != Sout) && (err == 1)) tp = tp + 1;
+			else if ((ref_sum == Sout) && (err == 1)) fp = fp + 1;
+			else if ((ref_sum == Sout) && (err == 0)) tn = tn + 1;
+                    end
+                end
+            end
+        end
+
+	$display("=== CLA ===");
+	$display("TP=%0d", tp);
+	$display("TN=%0d", tn);
+	$display("FP=%0d", fp);
+	$display("FN=%0d", fn);
+
+	tp = 0; tn = 0; fp = 0; fn = 0;
+	// Test: pozosta?e uszkodzenia w uk?adzie
+        for (i = GID_MOD3_BASE; i <= GID_MOD3_END; i = i + 1) begin
+
+            // test stuck-at-0 i stuck-at-1
+            for (sa = 0; sa <= 1; sa = sa + 1) begin
+
+                fault_val = sa;
+
+                // aktywuj jedno uszkodzenie
+                fault_en_bus = 0;
+                fault_en_bus[i] = 1;
+		
+
+                // przej?cie po wszystkich wej?ciach A,B
+                for (a = 0; a < 16; a = a + 1) begin
+                    for (b = 0; b < 16; b = b + 1) begin
+
+                        A = a;
+                        B = b;
+			ref_sum = A + B + Cin;
+
+                        A_mod3 = A % 3;
+                        B_mod3 = B % 3;
+
+                        #10; // ustalenie sygna?ów
+
+                        if ((ref_sum != Sout) && (err == 0)) begin
+			    fn = fn + 1;
+    			    $display(
+        			"NIEWYKRYTY BLAD ARYTMETYCZNY: GID=%0d SA=%0d A=%0d B=%0d Cin=%0d | ref=%0d Sout=%0d",
+        			i, sa, A, B, Cin, ref_sum, Sout
+    			    );
+			end
+			else if ((ref_sum != Sout) && (err == 1)) tp = tp + 1;
+			else if ((ref_sum == Sout) && (err == 1)) fp = fp + 1;
+			else if ((ref_sum == Sout) && (err == 0)) tn = tn + 1;
+                    end
+                end
+            end
+        end
+
+	$display("=== Mod3 Adder ===");
+	$display("TP=%0d", tp);
+	$display("TN=%0d", tn);
+	$display("FP=%0d", fp);
+	$display("FN=%0d", fn);
+
+	tp = 0; tn = 0; fp = 0; fn = 0;
+        for (i = GID_CMP_BASE; i <= GID_CMP_END; i = i + 1) begin
+
+            // test stuck-at-0 i stuck-at-1
+            for (sa = 0; sa <= 1; sa = sa + 1) begin
+
+                fault_val = sa;
+
+                // aktywuj jedno uszkodzenie
+                fault_en_bus = 0;
+                fault_en_bus[i] = 1;
+		
+
+                // przej?cie po wszystkich wej?ciach A,B
+                for (a = 0; a < 16; a = a + 1) begin
+                    for (b = 0; b < 16; b = b + 1) begin
+
+                        A = a;
+                        B = b;
+			ref_sum = A + B + Cin;
+
+                        A_mod3 = A % 3;
+                        B_mod3 = B % 3;
+
+                        #10; // ustalenie sygna?ów
+
+                        if ((ref_sum != Sout) && (err == 0)) begin
+			    fn = fn + 1;
+    			    $display(
+        			"NIEWYKRYTY BLAD ARYTMETYCZNY: GID=%0d SA=%0d A=%0d B=%0d Cin=%0d | ref=%0d Sout=%0d",
+        			i, sa, A, B, Cin, ref_sum, Sout
+    			    );
+			end
+			else if ((ref_sum != Sout) && (err == 1)) tp = tp + 1;
+			else if ((ref_sum == Sout) && (err == 1)) fp = fp + 1;
+			else if ((ref_sum == Sout) && (err == 0)) tn = tn + 1;
+                    end
+                end
+            end
+        end
+
+	$display("=== Komparator ===");
+	$display("TP=%0d", tp);
+	$display("TN=%0d", tn);
+	$display("FP=%0d", fp);
+	$display("FN=%0d", fn);
+
+	tp = 0; tn = 0; fp = 0; fn = 0;
+        for (i = GID_RESIDUE_BASE; i <= GID_RESIDUE_END; i = i + 1) begin
+
+            // test stuck-at-0 i stuck-at-1
+            for (sa = 0; sa <= 1; sa = sa + 1) begin
+
+                fault_val = sa;
+
+                // aktywuj jedno uszkodzenie
+                fault_en_bus = 0;
+                fault_en_bus[i] = 1;
+		
+
+                // przej?cie po wszystkich wej?ciach A,B
+                for (a = 0; a < 16; a = a + 1) begin
+                    for (b = 0; b < 16; b = b + 1) begin
+
+                        A = a;
+                        B = b;
+			ref_sum = A + B + Cin;
+
+                        A_mod3 = A % 3;
+                        B_mod3 = B % 3;
+
+                        #10; // ustalenie sygna?ów
+
+                        if ((ref_sum != Sout) && (err == 0)) begin
+			    fn = fn + 1;
+    			    $display(
+        			"NIEWYKRYTY BLAD ARYTMETYCZNY: GID=%0d SA=%0d A=%0d B=%0d Cin=%0d | ref=%0d Sout=%0d",
+        			i, sa, A, B, Cin, ref_sum, Sout
+    			    );
+			end
+			else if ((ref_sum != Sout) && (err == 1)) tp = tp + 1;
+			else if ((ref_sum == Sout) && (err == 1)) fp = fp + 1;
+			else if ((ref_sum == Sout) && (err == 0)) tn = tn + 1;
+                    end
+                end
+            end
+        end
+
+	$display("=== Generator reszt mod3 ===");
+	$display("TP=%0d", tp);
+	$display("TN=%0d", tn);
+	$display("FP=%0d", fp);
+	$display("FN=%0d", fn);
+
+        $display("=== KONIEC SYMULACJI ===");
+        $finish;
+    end
+
+endmodule

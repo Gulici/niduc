@@ -1,0 +1,111 @@
+
+module CLA #(
+    parameter NG = 128,
+    parameter GID_BASE = 0
+)(
+    input wire [3:0] X,
+    input wire [3:0] Y,
+    input wire Cin,
+    input wire [NG-1:0] fault_en_bus,
+    input wire fault_val,
+    output wire [3:0] S,
+    output wire Cout
+);
+
+    wire [3:0] s_int, P, G;
+    wire C1, C2, C3, C4;
+
+// inicjalizacja 4 sumatorow
+    PGA #(
+	.NG(NG),
+	.GID_S(GID_BASE + 0),
+	.GID_S(GID_BASE + 1),
+	.GID_S(GID_BASE + 2)
+    ) pga0 (
+	.A(X[0]),
+	.B(Y[0]),
+	.Cin(Cin),
+	.fault_en_bus(fault_en_bus),
+	.fault_val(fault_val),
+	.S(s_int[0]),
+	.P(P[0]),
+	.G(G[0])
+    );
+
+    PGA #(
+	.NG(NG),
+	.GID_S(GID_BASE + 3),
+	.GID_S(GID_BASE + 4),
+	.GID_S(GID_BASE + 5)
+    ) pga1 (
+	.A(X[1]),
+	.B(Y[1]),
+	.Cin(C1),
+	.fault_en_bus(fault_en_bus),
+	.fault_val(fault_val),
+	.S(s_int[1]),
+	.P(P[1]),
+	.G(G[1])
+    );
+
+    PGA #(
+	.NG(NG),
+	.GID_S(GID_BASE + 6),
+	.GID_S(GID_BASE + 7),
+	.GID_S(GID_BASE + 8)
+    ) pga2 (
+	.A(X[2]),
+	.B(Y[2]),
+	.Cin(C2),
+	.fault_en_bus(fault_en_bus),
+	.fault_val(fault_val),
+	.S(s_int[2]),
+	.P(P[2]),
+	.G(G[2])
+    );
+
+    PGA #(
+	.NG(NG),
+	.GID_S(GID_BASE + 9),
+	.GID_S(GID_BASE + 10),
+	.GID_S(GID_BASE + 11)
+    ) pga3 (
+	.A(X[3]),
+	.B(Y[3]),
+	.Cin(C3),
+	.fault_en_bus(fault_en_bus),
+	.fault_val(fault_val),
+	.S(s_int[3]),
+	.P(P[3]),
+	.G(G[3])
+    );
+
+
+// inicjalizacja modulu generuj?cego przeniesienia
+    CLA_CarryGen #(
+        .NG(NG),
+        .GID_C1(GID_BASE + 12),
+        .GID_C2(GID_BASE + 13),
+        .GID_C3(GID_BASE + 14),
+        .GID_C4(GID_BASE + 15)
+    ) cla_gen (
+        .C0(Cin),
+        .P(P),
+        .G(G),
+        .fault_en_bus(fault_en_bus),
+        .fault_val(fault_val),
+        .C1(C1),
+        .C2(C2),
+        .C3(C3),
+        .C4(C4)
+    );
+
+// przypisanie sygnalow wyjsciowych
+    assign S[0] = s_int[0];
+    assign S[1] = s_int[1];
+    assign S[2] = s_int[2];
+    assign S[3] = s_int[3];
+
+    assign Cout = C4;
+
+endmodule

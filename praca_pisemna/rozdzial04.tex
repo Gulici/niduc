@@ -1,1 +1,82 @@
 \chapter{Analiza wyników}
+
+W niniejszym rozdziale przedstawiono analizę wyników symulacji odporności na pojedyncze uszkodzenia typu \emph{stuck-at} dla dwóch wariantów sumatora binarnego: RCA oraz CLA.  
+W obu przypadkach analizie poddano zarówno tor arytmetyczny, jak i tor kontrolny oparty na kodzie resztowym modulo~3.
+
+\section{Wyniki symulacji dla układu RCA}
+
+\begin{lstlisting}[caption={Wyniki symulacji dla układu RCA~\ref{lst:tb_rca}},label={lst:rca_results}]
+# === START SYMULACJI ===
+# === RCA ref ===
+# TP=0
+# TN=256
+# FP=0
+# FN=0
+# === RCA ===
+# TP=2048
+# TN=2048
+# FP=0
+# FN=0
+# === Mod3 Adder ===
+# TP=0
+# TN=1024
+# FP=1024
+# FN=0
+# === Komparator ===
+# TP=0
+# TN=768
+# FP=256
+# FN=0
+# === Generator reszt mod3 ===
+# TP=0
+# TN=2048
+# FP=2048
+# FN=0
+# === KONIEC SYMULACJI ===
+\end{lstlisting}
+
+Najważniejszą obserwacją dla układu RCA jest całkowity brak błędów niewykrytych (\textbf{FN = 0}) we wszystkich badanych przypadkach. Oznacza to, że każde uszkodzenie prowadzące do błędu arytmetycznego zostało poprawnie zasygnalizowane przez tor kontrolny.
+
+W przypadku samego sumatora RCA uszkodzenia wstrzykiwane do toru arytmetycznego powodowały błąd wyniku w dokładnie 50\% przypadków. Pozostałe 50\% uszkodzeń nie miało wpływu na wynik obliczeń. Charakterystyczne jest przy tym równomierne rozłożenie przypadków \emph{TP} i \emph{TN}.
+
+Uszkodzenia wprowadzane do elementów toru kontrolnego nie powodowały błędów wyniku, lecz skutkowały pojawieniem się fałszywych alarmów (\emph{FP}).  
+Dla generatora reszt modulo~3 oraz sumatora modulo~3 liczba fałszywych alarmów była równa liczbie przypadków gdzie uszkodzenie nie powodowało błędu (\emph{FP = TN}), natomiast w przypadku komparatora fałszywy alarm występował w 25\% badanych przypadków.
+
+\section{Wyniki symulacji dla układu CLA}
+
+\begin{lstlisting}[caption={Wyniki symulacji dla układu CLA~\ref{lst:tb_cla}},label={lst:cla_results}]
+# === START SYMULACJI ===
+# === CLA ref ===
+# TP=0
+# TN=256
+# FP=0
+# FN=0
+# === CLA ===
+# TP=3140
+# TN=5052
+# FP=0
+# FN=0
+# === Mod3 Adder ===
+# TP=0
+# TN=1024
+# FP=1024
+# FN=0
+# === Komparator ===
+# TP=0
+# TN=768
+# FP=256
+# FN=0
+# === Generator reszt mod3 ===
+# TP=0
+# TN=2048
+# FP=2048
+# FN=0
+# === KONIEC SYMULACJI ===
+\end{lstlisting}
+
+Podobnie jak w przypadku układu RCA, również dla sumatora CLA nie odnotowano żadnego błędu niewykrytego (\textbf{FN = 0}). Oznacza to, że zastosowany mechanizm samosprawdzania zachowuje pełną skuteczność detekcji pojedynczych uszkodzeń także dla bardziej złożonej struktury arytmetycznej.
+
+W przeciwieństwie do RCA, w układzie CLA odsetek uszkodzeń prowadzących do błędu wyniku jest wyraźnie mniejszy i wynosi około 38\%. Większość wstrzykiwanych uszkodzeń zostaje zamaskowana przez strukturę sumatora, co można wiązać z równoległym wyznaczaniem przeniesień oraz większą liczbą ścieżek logicznych.
+
+Zachowanie toru kontrolnego dla układu CLA jest identyczne jak w przypadku RCA. Uszkodzenia wprowadzane do generatora reszt modulo~3, sumatora modulo~3 oraz komparatora prowadzą wyłącznie do fałszywych alarmów i nie wpływają na poprawność wyniku arytmetycznego. Jest to bezpośrednią konsekwencją separacji toru obliczeniowego i kontrolnego oraz stanowi oczekiwany efekt przyjętej architektury.
+

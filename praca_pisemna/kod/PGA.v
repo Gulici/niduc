@@ -1,0 +1,26 @@
+
+module PGA #(
+    parameter NG = 128,
+    parameter GID_S = 0,
+    parameter GID_P = 1,
+    parameter GID_G = 2
+)(
+    input  wire A,
+    input  wire B,
+    input  wire Cin,
+    input  wire [NG-1:0] fault_en_bus,
+    input  wire fault_val,
+    output wire S,
+    output wire P,
+    output wire G
+);
+
+    wire p_int = A ^ B;       // propagacja
+    wire g_int = A & B;       // generacja
+    wire s_int = p_int ^ Cin; // suma
+
+    // fault injection na kazdym sygnale
+    fault_mux #(.GID(GID_P), .NG(NG)) fm_p (p_int, fault_en_bus, fault_val, P);
+    fault_mux #(.GID(GID_G), .NG(NG)) fm_g (g_int, fault_en_bus, fault_val, G);
+    fault_mux #(.GID(GID_S), .NG(NG)) fm_s (s_int, fault_en_bus, fault_val, S);
+endmodule
